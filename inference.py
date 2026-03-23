@@ -4,9 +4,19 @@ import cv2
 from model import SiameseUNet
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+import os
+import gdown
 
+MODEL_PATH = "siamese_unet_checkpoint.pth"
+
+def download_model():
+    if not os.path.exists(MODEL_PATH):
+        url = "https://drive.google.com/uc?id=1Gb5bKSBM6Abtyud5OG9OwzI32FpHFQTK"
+        gdown.download(url, MODEL_PATH, quiet=False)
 # Load model
 def load_model():
+    download_model() 
+    
     model = SiameseUNet(3, 1)
     checkpoint = torch.load("siamese_unet_checkpoint.pth", map_location=device)
     model.load_state_dict(checkpoint['model_state_dict'])
